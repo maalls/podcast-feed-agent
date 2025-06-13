@@ -1,13 +1,31 @@
 from podcastfy.client import generate_podcast
+# import json from feeds.json
+import json
+
+# check if feeds.json exists and load it
+feeds = []
+try:
+    with open('feeds.json', 'r') as f:
+        feeds = json.load(f)
+except FileNotFoundError:
+    print("feeds.json not found. Please create it with a list of podcast URLs.")
+    exit(1)
+except json.JSONDecodeError:
+    print("feeds.json is not a valid JSON file. Please check its contents.")
+    exit(1)
+
+# making sure feeds is a list of urls
+if not isinstance(feeds, list):
+    print("feeds.json should be a list of URLs.")
+    exit(1)
+
 
 custom_config = {
     "output_language": 'French'
     
 }
 
-audio_file = generate_podcast(urls=[
-    "https://dwh.lequipe.fr/api/edito/rss?path=/Cyclisme/",
-],
+audio_file = generate_podcast(urls=feeds,
     llm_model_name="gpt-4o-mini",
     api_key_label="OPENAI_API_KEY",
     conversation_config=custom_config,)
