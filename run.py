@@ -1,7 +1,13 @@
 from podcastfy.client import generate_podcast
 # import json from feeds.json
 import json
-
+# load model name from .env file
+import os
+from dotenv import load_dotenv
+load_dotenv()
+# load environment variables
+MODEL = os.getenv('MODEL', 'gpt-4')
+print(f"Using model: {MODEL}")
 # check if feeds.json exists and load it
 feeds = []
 try:
@@ -22,10 +28,9 @@ if not isinstance(feeds, list):
 
 custom_config = {
     "output_language": 'French'
-    
 }
 
 audio_file = generate_podcast(urls=feeds,
-    llm_model_name="gpt-4o-mini",
-    api_key_label="OPENAI_API_KEY",
+    llm_model_name=MODEL,
+    api_key_label="API_KEY",
     conversation_config=custom_config,)
